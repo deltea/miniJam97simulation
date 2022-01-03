@@ -1,0 +1,22 @@
+{
+  "name": "minijam97simulation",
+  "version": "1.0.0",
+  "description": "A mini-game made for Mini Jam #97: Simulation",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thcheetah777/miniJam97simulation.git"
+  },
+  "keywords": [
+    "minijam"
+  ],
+  "author": "thcheetah777",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/thcheetah777/miniJam97simulation/issues"
+  },
+  "homepage": "https://github.com/thcheetah777/miniJam97simulation#readme"
+}
