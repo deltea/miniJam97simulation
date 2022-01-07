@@ -1,13 +1,13 @@
-function openCity(evt, cityName) {
-  var i, tabcontent, tablinks;
-  tabcontent = document.getElementsByClassName("tabcontent");
-  for (i = 0; i < tabcontent.length; i++) {
-    tabcontent[i].style.display = "none";
+document.getElementById("defaultOpen").click();
+function openTab(event, tabName) {
+  var tabContent = document.getElementsByClassName("tab-content");
+  var tabLinks = document.getElementsByClassName("tab-links");
+  for (var i = 0; i < tabContent.length; i++) {
+    tabContent[i].style.display = "none";
   }
-  tablinks = document.getElementsByClassName("tablinks");
-  for (i = 0; i < tablinks.length; i++) {
-    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  for (var i = 0; i < tabLinks.length; i++) {
+    tabLinks[i].className = tabLinks[i].className.replace(" active", "");
   }
-  document.getElementById(cityName).style.display = "block";
-  evt.currentTarget.className += " active";
+  document.getElementById(tabName).style.display = "block";
+  event.currentTarget.className += " active";
 }
