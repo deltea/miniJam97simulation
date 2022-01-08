@@ -28,8 +28,10 @@ function create() {
   game.music.play();
   game.music.setLoop(true);
 
-  // Create following sprite
+  // Create sprites
   game.player = this.physics.add.sprite(phaser.input.mousePointer.x, phaser.input.mousePointer.y, "one").setScale(8).setGravityY(-config.physics.arcade.gravity.y);
+  game.debugger = this.physics.add.sprite(0, 0, "debugger").setScale(8).setGravityY(-config.physics.arcade.gravity.y);
+  game.debugger.visible = false;
 
   // Check if mouse moving
   setInterval(function() {
@@ -41,6 +43,17 @@ function create() {
     game.oldMousePos.x = phaser.input.mousePointer.x;
     game.oldMousePos.y = phaser.input.mousePointer.y;
   }, 100);
+  setInterval(function() {
+    game.debugger.visible = true;
+    const random = Math.floor(Math.random() * 2);
+    let array = [{x: Math.floor(Math.random() * 2) ? 0 : config.width, y: Math.random() * config.height}, {x: Math.random() * config.width, y: Math.floor(Math.random() * 2) ? 0 : config.height}]
+    let choice = array[random];
+    game.debugger.x = choice.x;
+    game.debugger.y = choice.y;
+    setTimeout(function() {
+      game.debugger.visible = false;
+    }, 3000);
+  }, (Math.random() * 8000) + 3000);
 }
 
 // Update the sprites and groups
@@ -59,14 +72,12 @@ function update() {
 // Phaser config
 const config = {
   type: Phaser.AUTO,
-  scale: {
-    autoCenter: Phaser.Scale.CENTER_BOTH,
-    mode: Phaser.Scale.RESIZE
-  },
+  width: 1000,
+  height: 800,
   render: {
     pixelArt: true
   },
-  backgroundColor: 0xffffff,
+  backgroundColor: 0x000000,
   physics: {
     default: "arcade",
     arcade: {
