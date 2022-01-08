@@ -19,7 +19,10 @@ function preload() {
 // Create all the sprites and colliders and everything else
 function create() {
   // Phaser
-  var phaser = this;
+  let phaser = this;
+
+  // Create following sprite
+  game.player = this.physics.add.sprite(phaser.input.mousePointer.x, phaser.input.mousePointer.y, "one").setScale(8).setGravityY(-config.physics.arcade.gravity.y);
 
   // Check if mouse moving
   setInterval(function() {
@@ -30,13 +33,13 @@ function create() {
     }
     game.oldMousePos.x = phaser.input.mousePointer.x;
     game.oldMousePos.y = phaser.input.mousePointer.y;
-    console.log(game.mouseMoving);
   }, 100);
 }
 
 // Update the sprites and groups
 function update() {
-
+  game.player.x = this.input.mousePointer.x;
+  game.player.y = this.input.mousePointer.y;
 }
 
 // Phaser config
