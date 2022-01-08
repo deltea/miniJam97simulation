@@ -12,8 +12,7 @@ function preload() {
   // Images
   this.load.image("debugger", "assets/debugger.png");
   this.load.image("one", "assets/one.png");
-  this.load.image("zero0", "assets/zero0.png");
-  this.load.image("zero1", "assets/zero1.png");
+  this.load.image("zero", "assets/zero.png");
 }
 
 // Create all the sprites and colliders and everything else
@@ -40,6 +39,11 @@ function create() {
 function update() {
   game.player.x = this.input.mousePointer.x;
   game.player.y = this.input.mousePointer.y;
+  if (game.mouseMoving) {
+    game.player.setTexture("one");
+  } else {
+    game.player.setTexture("zero");
+  }
 }
 
 // Phaser config
