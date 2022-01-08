@@ -1,6 +1,10 @@
 // Load all the sprites and background
 function preload() {
-
+  // Images
+  this.load.image("debugger", "assets/debugger.png");
+  this.load.image("one", "assets/one.png");
+  this.load.image("zero0", "assets/zero0.png");
+  this.load.image("zero1", "assets/zero1.png");
 }
 
 // Create all the sprites and colliders and everything else
