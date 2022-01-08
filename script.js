@@ -121,15 +121,18 @@ function create() {
     }, 2000);
   }, (Math.random() * 10000) + 4000);
 
-  // Create time
-  setInterval(function() {
-    game.time.create(Math.random() * config.width, Math.random() * config.height, "time").setScale(8);
-  }, (Math.random() * 10000) + 5000);
+  // Penalty
+  setInterval(function () {
+    if (!game.mouseMoving && !game.debuggerSearching) {
+      game.points--;
+    }
+  }, 1500);
 
   // Colliders
   this.physics.add.overlap(game.player, game.time, function(player, time) {
     time.destroy();
-    game.points += 2;
+    game.time.create(Math.random() * config.width, Math.random() * config.height, "time").setScale(8);
+    game.points += 10;
   });
 }
 
@@ -143,6 +146,9 @@ function update() {
   } else {
     game.player.setTexture("zero");
     game.music.pause();
+  }
+  if (game.mouseMoving && game.debuggerSearching) {
+
   }
 }
 
@@ -162,7 +168,7 @@ const config = {
         y: 1500
       },
       enableBody: true,
-      debug: true
+      // debug: true
     }
   },
   scene: {
