@@ -13,12 +13,20 @@ function preload() {
   this.load.image("debugger", "assets/debugger.png");
   this.load.image("one", "assets/one.png");
   this.load.image("zero", "assets/zero.png");
+
+  // Sound
+  this.load.audio("music", "assets/music.mp3");
 }
 
 // Create all the sprites and colliders and everything else
 function create() {
   // Phaser
   let phaser = this;
+
+  // Load sounds
+  game.music = this.sound.add("music");
+  game.music.play();
+  game.music.setLoop(true);
 
   // Create following sprite
   game.player = this.physics.add.sprite(phaser.input.mousePointer.x, phaser.input.mousePointer.y, "one").setScale(8).setGravityY(-config.physics.arcade.gravity.y);
@@ -41,8 +49,10 @@ function update() {
   game.player.y = this.input.mousePointer.y;
   if (game.mouseMoving) {
     game.player.setTexture("one");
+    game.music.resume();
   } else {
     game.player.setTexture("zero");
+    game.music.pause();
   }
 }
 
