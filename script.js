@@ -22,6 +22,12 @@ function preload() {
   this.load.audio("music", "assets/music.mp3");
 }
 
+// Update score
+function updateScore(num) {
+  game.points += num;
+  game.score.text = game.points;
+}
+
 // Create all the sprites and colliders and everything else
 function create() {
   // Phaser
@@ -40,6 +46,11 @@ function create() {
   game.debugger.tweenY = 0;
   game.time = this.physics.add.staticGroup();
   game.time.create(Math.random() * config.width, Math.random() * config.height, "time").setScale(8);
+  game.score = this.add.text(50, 50, game.points, {
+    fontFamily: '"VT323"',
+    fontSize: 80,
+    color: 0xffffff
+  });
 
   // Check if mouse moving
   setInterval(function() {
@@ -55,9 +66,8 @@ function create() {
     game.oldMousePos.x = phaser.input.mousePointer.x;
     game.oldMousePos.y = phaser.input.mousePointer.y;
     if (game.timesNotMoving >= 20) {
-      game.points--;
+      updateScore(-1);
       game.timesNotMoving = 0;
-      console.log("Pen");
     }
   }, 100);
   setInterval(function() {
@@ -135,7 +145,7 @@ function create() {
   this.physics.add.overlap(game.player, game.time, function(player, time) {
     time.destroy();
     game.time.create(Math.random() * config.width, Math.random() * config.height, "time").setScale(8);
-    game.points += 10;
+    updateScore(10);
   });
 }
 
