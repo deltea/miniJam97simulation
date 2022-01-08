@@ -5,7 +5,8 @@ var game = {
     y: 0
   },
   mouseMoving: false,
-  debuggerSearching: false
+  debuggerSearching: false,
+  points: 0
 };
 
 // Load all the sprites and background
@@ -36,6 +37,8 @@ function create() {
   game.debugger.visible = false;
   game.debugger.tweenX = 0;
   game.debugger.tweenY = 0;
+  game.time = this.physics.add.staticGroup();
+  game.time.create(Math.random() * config.width, Math.random() * config.height, "time").setScale(8);
 
   // Check if mouse moving
   setInterval(function() {
@@ -117,6 +120,17 @@ function create() {
       }, 400);
     }, 2000);
   }, (Math.random() * 10000) + 4000);
+
+  // Create time
+  setInterval(function() {
+    game.time.create(Math.random() * config.width, Math.random() * config.height, "time").setScale(8);
+  }, (Math.random() * 10000) + 5000);
+
+  // Colliders
+  this.physics.add.overlap(game.player, game.time, function(player, time) {
+    time.destroy();
+    game.points += 2;
+  });
 }
 
 // Update the sprites and groups
