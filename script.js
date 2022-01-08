@@ -1,3 +1,12 @@
+// Main game object
+var game = {
+  oldMousePos: {
+    x: 0,
+    y: 0
+  },
+  mouseMoving: false
+};
+
 // Load all the sprites and background
 function preload() {
   // Images
@@ -9,7 +18,20 @@ function preload() {
 
 // Create all the sprites and colliders and everything else
 function create() {
+  // Phaser
+  var phaser = this;
 
+  // Check if mouse moving
+  setInterval(function() {
+    if (game.oldMousePos.x === phaser.input.mousePointer.x && game.oldMousePos.y === phaser.input.mousePointer.y) {
+      game.mouseMoving = false;
+    } else {
+      game.mouseMoving = true;
+    }
+    game.oldMousePos.x = phaser.input.mousePointer.x;
+    game.oldMousePos.y = phaser.input.mousePointer.y;
+    console.log(game.mouseMoving);
+  }, 100);
 }
 
 // Update the sprites and groups
@@ -44,3 +66,6 @@ const config = {
     update
   }
 };
+
+// Phaser game
+const phaserGame = new Phaser.Game(config);
