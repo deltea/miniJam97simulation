@@ -6,7 +6,8 @@ var game = {
   },
   mouseMoving: false,
   debuggerSearching: false,
-  points: 0
+  points: 0,
+  timesNotMoving: 0
 };
 
 // Load all the sprites and background
@@ -44,11 +45,20 @@ function create() {
   setInterval(function() {
     if (game.oldMousePos.x === phaser.input.mousePointer.x && game.oldMousePos.y === phaser.input.mousePointer.y) {
       game.mouseMoving = false;
+      if (!game.debuggerSearching) {
+        game.timesNotMoving++;
+      }
     } else {
       game.mouseMoving = true;
+      game.timesNotMoving = 0;
     }
     game.oldMousePos.x = phaser.input.mousePointer.x;
     game.oldMousePos.y = phaser.input.mousePointer.y;
+    if (game.timesNotMoving >= 20) {
+      game.points--;
+      game.timesNotMoving = 0;
+      console.log("Pen");
+    }
   }, 100);
   setInterval(function() {
     game.debugger.visible = true;
@@ -120,13 +130,6 @@ function create() {
       }, 400);
     }, 2000);
   }, (Math.random() * 10000) + 4000);
-
-  // Penalty
-  setInterval(function () {
-    if (!game.mouseMoving && !game.debuggerSearching) {
-      game.points--;
-    }
-  }, 1500);
 
   // Colliders
   this.physics.add.overlap(game.player, game.time, function(player, time) {
