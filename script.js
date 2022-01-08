@@ -14,6 +14,7 @@ function preload() {
   this.load.image("debugger", "assets/debugger.png");
   this.load.image("one", "assets/one.png");
   this.load.image("zero", "assets/zero.png");
+  this.load.image("time", "assets/time.png");
 
   // Sound
   this.load.audio("music", "assets/music.mp3");
