@@ -83,7 +83,7 @@ function create() {
       targets: game.debugger,
       x: game.debugger.tweenX,
       y: game.debugger.tweenY,
-      duration: 800,
+      duration: 400,
       callbackScope: this,
       onComplete: function() {
         game.debuggerSearching = true;
@@ -107,15 +107,15 @@ function create() {
         targets: game.debugger,
         x: game.debugger.tweenX,
         y: game.debugger.tweenY,
-        duration: 800,
+        duration: 400,
         callbackScope: this
       });
       setTimeout(function () {
         game.debugger.visible = false;
         game.debuggerSearching = false;
-      }, 800);
+      }, 400);
     }, 2000);
-  }, (Math.random() * 8000) + 3000);
+  }, (Math.random() * 10000) + 4000);
 }
 
 // Update the sprites and groups
