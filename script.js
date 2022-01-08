@@ -146,6 +146,20 @@ function create() {
     time.destroy();
     game.time.create(Math.random() * config.width, Math.random() * config.height, "time").setScale(8);
     updateScore(10);
+    let text = phaser.add.text(time.x, time.y, "+10", {
+      fontFamily: '"VT323"',
+      fontSize: 40,
+      color: "#4caf50"
+    });
+    phaser.tweens.add({
+      targets: text,
+      y: text.y - 20,
+      duration: 400,
+      callbackScope: this
+    });
+    setTimeout(function () {
+      text.destroy();
+    }, 400);
   });
 }
 
