@@ -27,6 +27,7 @@ class Game extends Phaser.Scene {
 
     // Sound
     this.load.audio("music", "assets/music.mp3");
+    this.load.audio("timeWasted", "assets/timeWasted.wav");
   }
 
   // Update score
@@ -42,6 +43,7 @@ class Game extends Phaser.Scene {
 
     // Load sounds
     game.music = this.sound.add("music");
+    game.timeWasted = this.sound.add("timeWasted");
     game.music.play();
     game.music.setLoop(true);
 
@@ -150,6 +152,7 @@ class Game extends Phaser.Scene {
 
     // Colliders
     this.physics.add.overlap(game.player, game.time, function(player, time) {
+      game.timeWasted.play();
       time.destroy();
       game.time.create(Math.random() * config.width, Math.random() * config.height, "time").setScale(8).setGravityY(-config.physics.arcade.gravity.y);
       phaser.updateScore(10);
