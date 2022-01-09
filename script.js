@@ -9,7 +9,11 @@ var game = {
   points: 0,
   timesNotMoving: 0,
   playAgainCursorDown: false,
-  debuggerPeekSpeed: 400
+  debuggerPeekSpeed: 400,
+  comboCount: 0,
+  comboColors: ["#4caf50", "#73e1f0", "#f0d847", "#f07e48", "#f0524a", "#6aee90", "#d270f8", "#d96264", "#d6b3f8"],
+  timeValue: 10,
+  comboText: ""
 };
 
 // Main scene
@@ -75,12 +79,15 @@ class Game extends Phaser.Scene {
       game.oldMousePos.x = phaser.input.mousePointer.x;
       game.oldMousePos.y = phaser.input.mousePointer.y;
       if (game.timesNotMoving >= 20) {
-        phaser.updateScore(-5);
+        phaser.updateScore(-10);
         game.timesNotMoving = 0;
       }
     }, 100);
     game.debuggerMove = setInterval(function() {
       game.debugger.visible = true;
+      game.comboCount = 0;
+      game.timeValue = 10;
+      game.comboText = "";
       const random = Math.floor(Math.random() * 2);
       let array = [{x: Math.floor(Math.random() * 2) ? 0 : config.width, y: Math.random() * config.height}, {x: Math.random() * config.width, y: Math.floor(Math.random() * 2) ? 0 : config.height}]
       let choice = array[random];
@@ -147,20 +154,20 @@ class Game extends Phaser.Scene {
           game.debugger.visible = false;
           game.debuggerSearching = false;
         }, game.debuggerPeekSpeed);
-      }, 2000);
-    }, (Math.random() * 10000) + 4000);
+      }, 1000);
+    }, (Math.random() * 10000) + 3000);
 
     // Colliders
     this.physics.add.overlap(game.player, game.time, function(player, time) {
       game.timeWasted.play();
       time.destroy();
       game.time.create(Math.random() * config.width, Math.random() * config.height, "time").setScale(8).setGravityY(-config.physics.arcade.gravity.y);
-      phaser.updateScore(10);
+      phaser.updateScore(game.timeValue);
       game.debuggerPeekSpeed -= 5;
-      let text = phaser.add.text(time.x, time.y, "+10", {
+      let text = phaser.add.text(time.x, time.y, `+${game.timeValue}\n${game.comboText}`, {
         fontFamily: '"VT323"',
         fontSize: 40,
-        color: "#4caf50"
+        color: game.comboColors[game.comboCount] ? game.comboColors[game.comboCount] : game.comboColors[game.comboColors.length - 1]
       });
       phaser.tweens.add({
         targets: text,
@@ -171,6 +178,36 @@ class Game extends Phaser.Scene {
       setTimeout(function () {
         text.destroy();
       }, 400);
+      game.comboCount++;
+      game.timeValue += 5;
+      switch (game.comboCount) {
+        case 0:
+          game.comboText = "";
+          break;
+        case 1:
+          game.comboText = "Good";
+          break;
+        case 2:
+          game.comboText = "Nice";
+          break;
+        case 3:
+          game.comboText = "Cool";
+          break;
+        case 4:
+          game.comboText = "Superb";
+          break;
+        case 5:
+          game.comboText = "WOW";
+          break;
+        case 6:
+          game.comboText = "WHAT";
+          break;
+        case 7:
+          game.comboText = "IMPOSSIBLE!";
+          break;
+        default:
+          game.comboText = "HOW?!?!";
+      }
     });
   }
 
@@ -247,6 +284,9 @@ class GameOver extends Phaser.Scene {
         game.timesNotMoving = 0;
         game.playAgainCursorDown = false;
         game.debuggerPeekSpeed = 400;
+        game.comboCount = 0;
+        game.timeValue = 10;
+        game.comboText = "";
         phaser.scene.stop("GameOver");
         phaser.scene.start("Game");
       }
