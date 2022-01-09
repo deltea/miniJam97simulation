@@ -59,7 +59,7 @@ class Game extends Phaser.Scene {
     });
 
     // Check if mouse moving
-    setInterval(function() {
+    game.mouseCheck = setInterval(function() {
       if (game.oldMousePos.x === phaser.input.mousePointer.x && game.oldMousePos.y === phaser.input.mousePointer.y) {
         game.mouseMoving = false;
         if (!game.debuggerSearching) {
@@ -76,7 +76,7 @@ class Game extends Phaser.Scene {
         game.timesNotMoving = 0;
       }
     }, 100);
-    setInterval(function() {
+    game.debuggerMove = setInterval(function() {
       game.debugger.visible = true;
       const random = Math.floor(Math.random() * 2);
       let array = [{x: Math.floor(Math.random() * 2) ? 0 : config.width, y: Math.random() * config.height}, {x: Math.random() * config.width, y: Math.floor(Math.random() * 2) ? 0 : config.height}]
@@ -181,6 +181,8 @@ class Game extends Phaser.Scene {
       game.music.pause();
     }
     if (game.mouseMoving && game.debuggerSearching) {
+      clearInterval(game.mouseCheck);
+      clearInterval(game.debuggerMove);
       this.scene.stop("Game");
       this.scene.start("GameOver");
     }
@@ -194,7 +196,7 @@ class GameOver extends Phaser.Scene {
   }
   preload() {
     this.load.image("playAgain", "assets/playAgain.png");
-    this.load.image("playAgainCursor", "assets/playAgainCursor.png");
+    this.load.image("playAgainCursor", "assets/cursor.png");
   }
   create() {
     let phaser = this;
@@ -215,9 +217,16 @@ class GameOver extends Phaser.Scene {
       game.playAgainCursorDown = false;
     });
     this.physics.add.overlap(game.playAgainCursor, game.playAgainButton, function () {
-      game.playAgainButton.setScale(7);
       if (game.playAgainCursorDown) {
         game.points = 0;
+        game.oldMousePos = {
+          x: 0,
+          y: 0
+        };
+        game.mouseMoving = false;
+        game.debuggerSearching = false;
+        game.timesNotMoving = 0;
+        game.playAgainCursorDown = false;
         phaser.scene.stop("GameOver");
         phaser.scene.start("Game");
       }
@@ -226,6 +235,47 @@ class GameOver extends Phaser.Scene {
   update() {
     game.playAgainCursor.x = this.input.mousePointer.x;
     game.playAgainCursor.y = this.input.mousePointer.y;
+  }
+}
+
+// Start menu
+class Start extends Phaser.Scene {
+  constructor() {
+    super("Start");
+  }
+  preload() {
+    this.load.image("startButton", "assets/start.png");
+    this.load.image("startCursor", "assets/cursor.png");
+  }
+  create() {
+    let phaser = this;
+    this.add.text(400, 100, "HYPOTHESIS", {
+      fontFamily: '"VT323"',
+      fontSize: 100,
+      color: "#4caf50"
+    });
+    game.startButton = this.physics.add.sprite(625, 400, "startButton").setScale(8).setInteractive().setGravityY(-config.physics.arcade.gravity.y);
+    game.startCursor = this.physics.add.sprite(this.input.mousePointer.x, this.input.mousePointer.y, "startCursor").setScale(8).setGravityY(-config.physics.arcade.gravity.y);
+    this.physics.add.overlap(game.startButton);
+    this.input.on("pointerdown", function () {
+      game.startCursor.setScale(7);
+      game.playAgainCursorDown = true;
+    });
+    this.input.on("pointerup", function () {
+      game.startCursor.setScale(8);
+      game.playAgainCursorDown = false;
+    });
+    this.physics.add.overlap(game.startCursor, game.startButton, function () {
+      if (game.playAgainCursorDown) {
+        game.playAgainCursorDown = false;
+        phaser.scene.stop("Start");
+        phaser.scene.start("Game");
+      }
+    });
+  }
+  update() {
+    game.startCursor.x = this.input.mousePointer.x;
+    game.startCursor.y = this.input.mousePointer.y;
   }
 }
 
@@ -245,10 +295,10 @@ const config = {
         y: 1500
       },
       enableBody: true,
-      debug: true
+      // debug: true
     }
   },
-  scene: [Game, GameOver]
+  scene: [Start, Game, GameOver]
 };
 
 // Phaser game
