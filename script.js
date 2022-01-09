@@ -9,7 +9,7 @@ var game = {
   points: 0,
   timesNotMoving: 0,
   playAgainCursorDown: false,
-  debuggerPeekSpeed: 400,
+  debuggerPeekSpeed: 800,
   comboCount: 0,
   comboColors: ["#4caf50", "#73e1f0", "#f0d847", "#f07e48", "#f0524a", "#6aee90", "#d270f8", "#d96264", "#d6b3f8"],
   timeValue: 10,
@@ -34,10 +34,14 @@ class Game extends Phaser.Scene {
     this.load.audio("timeWasted", "assets/timeWasted.wav");
   }
 
-  // Update score
+  // Update
   updateScore(num) {
     game.points += num;
     game.score.text = game.points;
+  }
+  updateCombo(num) {
+    game.comboCount += num;
+    game.comboTextbox.text = game.comboCount;
   }
 
   // Create all the sprites and colliders and everything else
@@ -60,6 +64,11 @@ class Game extends Phaser.Scene {
     game.time = this.physics.add.group();
     game.time.create(Math.random() * config.width, Math.random() * config.height, "time").setScale(8).setGravityY(-config.physics.arcade.gravity.y);
     game.score = this.add.text(50, 50, game.points, {
+      fontFamily: '"VT323"',
+      fontSize: 80,
+      color: 0xffffff
+    });
+    game.comboTextbox = this.add.text(1150, 50, game.comboCount, {
       fontFamily: '"VT323"',
       fontSize: 80,
       color: 0xffffff
@@ -155,7 +164,7 @@ class Game extends Phaser.Scene {
           game.debuggerSearching = false;
         }, game.debuggerPeekSpeed);
       }, 1000);
-    }, (Math.random() * 10000) + 3000);
+    }, (Math.random() * 9000) + 1000);
 
     // Colliders
     this.physics.add.overlap(game.player, game.time, function(player, time) {
@@ -164,7 +173,7 @@ class Game extends Phaser.Scene {
       game.time.create(Math.random() * config.width, Math.random() * config.height, "time").setScale(8).setGravityY(-config.physics.arcade.gravity.y);
       phaser.updateScore(game.timeValue);
       game.debuggerPeekSpeed -= 5;
-      let text = phaser.add.text(time.x, time.y, `+${game.timeValue}\n${game.comboCount ? `${game.comboCount} Combo\n` : ""}${game.comboText}`, {
+      let text = phaser.add.text(time.x, time.y, `+${game.timeValue}\n${game.comboText}`, {
         fontFamily: '"VT323"',
         fontSize: 40,
         color: game.comboColors[game.comboCount] ? game.comboColors[game.comboCount] : game.comboColors[game.comboColors.length - 1]
@@ -178,7 +187,7 @@ class Game extends Phaser.Scene {
       setTimeout(function () {
         text.destroy();
       }, 400);
-      game.comboCount++;
+      phaser.updateCombo(1);
       game.timeValue += 5;
       switch (game.comboCount) {
         case 0:
@@ -283,7 +292,7 @@ class GameOver extends Phaser.Scene {
         game.debuggerSearching = false;
         game.timesNotMoving = 0;
         game.playAgainCursorDown = false;
-        game.debuggerPeekSpeed = 400;
+        game.debuggerPeekSpeed = 800;
         game.comboCount = 0;
         game.timeValue = 10;
         game.comboText = "";
