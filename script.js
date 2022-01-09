@@ -73,7 +73,7 @@ class Game extends Phaser.Scene {
       game.oldMousePos.x = phaser.input.mousePointer.x;
       game.oldMousePos.y = phaser.input.mousePointer.y;
       if (game.timesNotMoving >= 20) {
-        phaser.updateScore(-1);
+        phaser.updateScore(-5);
         game.timesNotMoving = 0;
       }
     }, 100);
@@ -206,6 +206,19 @@ class GameOver extends Phaser.Scene {
     this.add.text(450, 100, "GAME OVER", {
       fontFamily: '"VT323"',
       fontSize: 100,
+      color: "#4caf50"
+    });
+    if (game.points > localStorage.getItem("highScore") || !localStorage.getItem("highScore")) {
+      localStorage.setItem("highScore", game.points);
+    }
+    this.add.text(520, 200, `High Score: ${localStorage.getItem("highScore")}`, {
+      fontFamily: '"VT323"',
+      fontSize: 40,
+      color: "#4caf50"
+    });
+    this.add.text(550, 250, `Score: ${game.points}`, {
+      fontFamily: '"VT323"',
+      fontSize: 40,
       color: "#4caf50"
     });
     game.playAgainButton = this.physics.add.sprite(625, 400, "playAgain").setScale(8).setInteractive().setGravityY(-config.physics.arcade.gravity.y);
