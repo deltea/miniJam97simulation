@@ -8,7 +8,8 @@ var game = {
   debuggerSearching: false,
   points: 0,
   timesNotMoving: 0,
-  playAgainCursorDown: false
+  playAgainCursorDown: false,
+  debuggerPeekSpeed: 400
 };
 
 // Main scene
@@ -113,7 +114,7 @@ class Game extends Phaser.Scene {
         targets: game.debugger,
         x: game.debugger.tweenX,
         y: game.debugger.tweenY,
-        duration: 400,
+        duration: game.debuggerPeekSpeed,
         callbackScope: this,
         onComplete: function() {
           game.debuggerSearching = true;
@@ -137,13 +138,13 @@ class Game extends Phaser.Scene {
           targets: game.debugger,
           x: game.debugger.tweenX,
           y: game.debugger.tweenY,
-          duration: 400,
+          duration: game.debuggerPeekSpeed,
           callbackScope: this
         });
         setTimeout(function () {
           game.debugger.visible = false;
           game.debuggerSearching = false;
-        }, 400);
+        }, game.debuggerPeekSpeed);
       }, 2000);
     }, (Math.random() * 10000) + 4000);
 
@@ -152,6 +153,7 @@ class Game extends Phaser.Scene {
       time.destroy();
       game.time.create(Math.random() * config.width, Math.random() * config.height, "time").setScale(8).setGravityY(-config.physics.arcade.gravity.y);
       phaser.updateScore(10);
+      game.debuggerPeekSpeed -= 5;
       let text = phaser.add.text(time.x, time.y, "+10", {
         fontFamily: '"VT323"',
         fontSize: 40,
@@ -183,6 +185,7 @@ class Game extends Phaser.Scene {
     if (game.mouseMoving && game.debuggerSearching) {
       clearInterval(game.mouseCheck);
       clearInterval(game.debuggerMove);
+      game.music.stop();
       this.scene.stop("Game");
       this.scene.start("GameOver");
     }
@@ -227,6 +230,7 @@ class GameOver extends Phaser.Scene {
         game.debuggerSearching = false;
         game.timesNotMoving = 0;
         game.playAgainCursorDown = false;
+        game.debuggerPeekSpeed = 400;
         phaser.scene.stop("GameOver");
         phaser.scene.start("Game");
       }
@@ -249,7 +253,7 @@ class Start extends Phaser.Scene {
   }
   create() {
     let phaser = this;
-    this.add.text(400, 100, "HYPOTHESIS", {
+    this.add.text(420, 100, "HYPOTHESIS", {
       fontFamily: '"VT323"',
       fontSize: 100,
       color: "#4caf50"
