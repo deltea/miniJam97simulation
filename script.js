@@ -13,7 +13,8 @@ var game = {
   comboCount: 0,
   comboColors: ["#4caf50", "#73e1f0", "#f0d847", "#f07e48", "#f0524a", "#6aee90", "#d270f8", "#d96264", "#d6b3f8"],
   timeValue: 10,
-  comboText: ""
+  comboText: "",
+  bestCombo: 0
 };
 
 // Main scene
@@ -63,9 +64,19 @@ class Game extends Phaser.Scene {
     game.debugger.tweenY = 0;
     game.time = this.physics.add.group();
     game.time.create(Math.random() * config.width, Math.random() * config.height, "time").setScale(8).setGravityY(-config.physics.arcade.gravity.y);
+    this.add.text(50, 30, "Score: ", {
+      fontFamily: '"VT323"',
+      fontSize: 40,
+      color: 0xffffff
+    });
     game.score = this.add.text(50, 50, game.points, {
       fontFamily: '"VT323"',
       fontSize: 80,
+      color: 0xffffff
+    });
+    this.add.text(1150, 30, "Combo: ", {
+      fontFamily: '"VT323"',
+      fontSize: 40,
       color: 0xffffff
     });
     game.comboTextbox = this.add.text(1150, 50, game.comboCount, {
@@ -94,7 +105,10 @@ class Game extends Phaser.Scene {
     }, 100);
     game.debuggerMove = setInterval(function() {
       game.debugger.visible = true;
-      game.comboCount = 0;
+      if (game.comboCount > game.bestCombo) {
+        game.bestCombo = game.comboCount;
+      }
+      phaser.updateCombo(-game.comboCount);
       game.timeValue = 10;
       game.comboText = "";
       const random = Math.floor(Math.random() * 2);
@@ -270,7 +284,12 @@ class GameOver extends Phaser.Scene {
       fontSize: 40,
       color: "#4caf50"
     });
-    game.playAgainButton = this.physics.add.sprite(625, 400, "playAgain").setScale(8).setInteractive().setGravityY(-config.physics.arcade.gravity.y);
+    this.add.text(530, 300, `Best Combo: ${game.bestCombo}`, {
+      fontFamily: '"VT323"',
+      fontSize: 40,
+      color: "#4caf50"
+    });
+    game.playAgainButton = this.physics.add.sprite(625, 450, "playAgain").setScale(8).setInteractive().setGravityY(-config.physics.arcade.gravity.y);
     game.playAgainCursor = this.physics.add.sprite(this.input.mousePointer.x, this.input.mousePointer.y, "playAgainCursor").setScale(8).setGravityY(-config.physics.arcade.gravity.y);
     this.physics.add.overlap(game.playAgainButton);
     this.input.on("pointerdown", function () {
@@ -296,6 +315,7 @@ class GameOver extends Phaser.Scene {
         game.comboCount = 0;
         game.timeValue = 10;
         game.comboText = "";
+        game.bestCombo = 0;
         phaser.scene.stop("GameOver");
         phaser.scene.start("Game");
       }
