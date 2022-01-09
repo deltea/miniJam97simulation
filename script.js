@@ -78,7 +78,7 @@ class Game extends Phaser.Scene {
       }
       game.oldMousePos.x = phaser.input.mousePointer.x;
       game.oldMousePos.y = phaser.input.mousePointer.y;
-      if (game.timesNotMoving >= 20) {
+      if (game.timesNotMoving >= 10) {
         phaser.updateScore(-10);
         game.timesNotMoving = 0;
       }
@@ -164,7 +164,7 @@ class Game extends Phaser.Scene {
       game.time.create(Math.random() * config.width, Math.random() * config.height, "time").setScale(8).setGravityY(-config.physics.arcade.gravity.y);
       phaser.updateScore(game.timeValue);
       game.debuggerPeekSpeed -= 5;
-      let text = phaser.add.text(time.x, time.y, `+${game.timeValue}\n${game.comboText}`, {
+      let text = phaser.add.text(time.x, time.y, `+${game.timeValue}\n${game.comboCount ? `${game.comboCount} Combo\n` : ""}${game.comboText}`, {
         fontFamily: '"VT323"',
         fontSize: 40,
         color: game.comboColors[game.comboCount] ? game.comboColors[game.comboCount] : game.comboColors[game.comboColors.length - 1]
